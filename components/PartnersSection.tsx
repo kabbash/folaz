@@ -7,7 +7,7 @@ interface PartnersSectionProps {
 
 export function PartnersSection({ partners }: PartnersSectionProps) {
   // Sort by display order
-  const sortedPartners = [...partners].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
+  const sortedPartners = [...partners].sort((a, b) => (a.order || 0) - (b.order || 0))
 
   return (
     <section className="w-full bg-white py-10 md:py-14">

@@ -7,7 +7,7 @@ interface PartnerLogosProps {
 
 export function PartnerLogos({ partners }: PartnerLogosProps) {
   // Sort by display order
-  const sortedPartners = [...partners].sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0))
+  const sortedPartners = [...partners].sort((a, b) => (a.order || 0) - (b.order || 0))
 
   return (
     <div className="w-full flex flex-wrap items-center justify-center gap-6 md:gap-10">
