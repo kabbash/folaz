@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Navbar } from '@/components/Navbar'
-import { Footer } from '@/components/Footer'
+import { LayoutContent } from '@/components/LayoutContent'
 import { getServices } from '@/data/services'
 
 const geistSans = Geist({
@@ -45,13 +44,9 @@ export default async function RootLayout({
           />
 
           <div className="relative z-10">
-            <Navbar services={services} />
-            
-            {children}
-
-            <div className="mt-8">
-              <Footer />
-            </div>
+            <LayoutContent services={services}>
+              {children}
+            </LayoutContent>
           </div>
         </div>
       </body>

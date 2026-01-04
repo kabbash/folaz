@@ -19,6 +19,10 @@ NEXT_PUBLIC_SANITY_API_VERSION=2024-12-20
 # Create a token at https://sanity.io/manage/personal/tokens
 SANITY_API_TOKEN=your_token_here
 
+# Revalidation Secret (required for webhook security)
+# Generate a random string to secure the revalidation endpoint
+SANITY_REVALIDATE_SECRET=your_random_secret_here
+
 # Resend Configuration
 # Get your API key from https://resend.com/api-keys
 
@@ -42,6 +46,19 @@ RESEND_TO_EMAIL=info@folazengineering.com
 3. Copy the **Project ID**
 4. The default dataset is usually **production**
 5. Create an API token with **Editor** or **Administrator** permissions
+
+## Generating Revalidation Secret
+
+The revalidation secret is used to secure the webhook endpoint. Generate a random string:
+
+```bash
+# On macOS/Linux, generate a random secret:
+openssl rand -base64 32
+
+# Or use any random string generator
+```
+
+Copy the generated string and use it as `SANITY_REVALIDATE_SECRET`.
 
 ## Getting Your Resend API Key
 
