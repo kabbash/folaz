@@ -10,7 +10,6 @@ export { ServiceCarousel } from './ServiceCarousel'
 export { ProjectCarousel } from './ProjectCarousel'
 export { InternshipModal } from './InternshipModal'
 export { JobApplicationModal } from './JobApplicationModal'
-export { LayoutContent } from './LayoutContent'
 export { ConditionalLayout } from './ConditionalLayout'
 
 
