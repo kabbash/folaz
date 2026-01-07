@@ -21,6 +21,12 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'website',
+      title: 'Website URL',
+      type: 'url',
+      description: 'Partner website URL (optional)',
+    }),
+    defineField({
       name: 'order',
       title: 'Display Order',
       type: 'number',

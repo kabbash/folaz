@@ -32,6 +32,8 @@ export interface Service extends SanityDocument {
   shortDescription: string
   description: string
   expertises?: string[]
+  projectsSectionTitle?: string
+  order: number
 }
 
 // Project Type
@@ -64,6 +66,7 @@ export interface Partner extends SanityDocument {
   _type: 'partner'
   name: string
   logo: SanityImage
+  website?: string
   order?: number
 }
 

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import { Service } from '@/types'
 import Image from 'next/image'
@@ -10,10 +11,17 @@ interface NavbarProps {
 }
 
 export function Navbar({ services = [] }: NavbarProps) {
+  const pathname = usePathname()
   const [isServicesOpen, setIsServicesOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const mobileServicesRef = useRef<HTMLDivElement>(null)
+
+  // Determine active states
+  const isHomeActive = pathname === '/'
+  const isServicesActive = pathname?.startsWith('/services')
+  const isCareersActive = pathname === '/careers'
+  const isContactActive = pathname === '/contact'
 
   // Close dropdown when clicking outside (desktop only)
   useEffect(() => {
@@ -38,10 +46,14 @@ export function Navbar({ services = [] }: NavbarProps) {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <div className="h-[39px] md:h-[44px] w-[140px] md:w-[160px] relative">
-              <Image src="/assets/images/nav-logo.png" alt="Folaz" fill
-              className="object-cover"
-              priority />
+            <div className="h-[50px] md:h-[56px] w-[180px] md:w-[200px] relative">
+              <Image 
+                src="/nav-logo.png" 
+                alt="Folaz" 
+                fill
+                className="object-contain"
+                priority 
+              />
             </div>
           </Link>
 
@@ -49,7 +61,9 @@ export function Navbar({ services = [] }: NavbarProps) {
           <div className="hidden md:flex items-center gap-0">
             <Link 
               href="/" 
-              className="px-6 py-2.5 text-[16px] font-semibold text-[#1212a0] border-r border-[#d8d8dd]"
+              className={`px-6 py-2.5 text-[16px] font-semibold border-r border-[#d8d8dd] transition-colors ${
+                isHomeActive ? 'text-[#1212a0]' : 'text-[#15151c] hover:text-[#1212a0]'
+              }`}
             >
               Home
             </Link>
@@ -57,12 +71,14 @@ export function Navbar({ services = [] }: NavbarProps) {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsServicesOpen(!isServicesOpen)}
-                className="px-6 py-2.5 text-[16px] font-semibold text-[#15151c] border-r border-[#d8d8dd] flex items-center gap-2.5 hover:bg-[rgba(219,219,219,0.25)] transition-colors"
+                className={`px-6 py-2.5 text-[16px] font-semibold border-r border-[#d8d8dd] flex items-center gap-2.5 hover:bg-[rgba(219,219,219,0.25)] transition-colors ${
+                  isServicesActive ? 'text-[#1212a0]' : 'text-[#15151c]'
+                }`}
                 type="button"
               >
                 Services
                 <svg width="12" height="6" viewBox="0 0 12 6" fill="none" className={`transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`}>
-                  <path d="M1 1L6 5L11 1" stroke="#15151c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M1 1L6 5L11 1" stroke={isServicesActive ? '#1212a0' : '#15151c'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
 
@@ -89,14 +105,18 @@ export function Navbar({ services = [] }: NavbarProps) {
 
             <Link 
               href="/careers" 
-              className="px-6 py-2.5 text-[16px] font-semibold text-[#15151c] border-r border-[#d8d8dd]"
+              className={`px-6 py-2.5 text-[16px] font-semibold border-r border-[#d8d8dd] transition-colors ${
+                isCareersActive ? 'text-[#1212a0]' : 'text-[#15151c] hover:text-[#1212a0]'
+              }`}
             >
               Careers
             </Link>
 
             <Link 
               href="/contact" 
-              className="px-6 py-2.5 text-[16px] font-semibold text-[#15151c]"
+              className={`px-6 py-2.5 text-[16px] font-semibold transition-colors ${
+                isContactActive ? 'text-[#1212a0]' : 'text-[#15151c] hover:text-[#1212a0]'
+              }`}
             >
               Contact
             </Link>
@@ -125,7 +145,9 @@ export function Navbar({ services = [] }: NavbarProps) {
           <div className="md:hidden mt-4 pt-4 border-t border-[#d8d8dd] flex flex-col gap-2">
             <Link 
               href="/" 
-              className="px-4 py-2.5 text-[16px] font-semibold text-[#1212a0] hover:bg-[#f5f5f6] rounded transition-colors"
+              className={`px-4 py-2.5 text-[16px] font-semibold hover:bg-[#f5f5f6] rounded transition-colors ${
+                isHomeActive ? 'text-[#1212a0]' : 'text-[#15151c]'
+              }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Home
@@ -135,12 +157,14 @@ export function Navbar({ services = [] }: NavbarProps) {
             <div ref={mobileServicesRef}>
               <button
                 onClick={() => setIsServicesOpen(!isServicesOpen)}
-                className="w-full px-4 py-2.5 text-[16px] font-semibold text-[#15151c] hover:bg-[#f5f5f6] rounded transition-colors flex items-center justify-between"
+                className={`w-full px-4 py-2.5 text-[16px] font-semibold hover:bg-[#f5f5f6] rounded transition-colors flex items-center justify-between ${
+                  isServicesActive ? 'text-[#1212a0]' : 'text-[#15151c]'
+                }`}
                 type="button"
               >
                 Services
                 <svg width="12" height="6" viewBox="0 0 12 6" fill="none" className={`transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`}>
-                  <path d="M1 1L6 5L11 1" stroke="#15151c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M1 1L6 5L11 1" stroke={isServicesActive ? '#1212a0' : '#15151c'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
               
@@ -165,14 +189,18 @@ export function Navbar({ services = [] }: NavbarProps) {
             
             <Link 
               href="/careers" 
-              className="px-4 py-2.5 text-[16px] font-semibold text-[#15151c] hover:bg-[#f5f5f6] rounded transition-colors"
+              className={`px-4 py-2.5 text-[16px] font-semibold hover:bg-[#f5f5f6] rounded transition-colors ${
+                isCareersActive ? 'text-[#1212a0]' : 'text-[#15151c]'
+              }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Careers
             </Link>
             <Link 
               href="/contact" 
-              className="px-4 py-2.5 text-[16px] font-semibold text-[#15151c] hover:bg-[#f5f5f6] rounded transition-colors"
+              className={`px-4 py-2.5 text-[16px] font-semibold hover:bg-[#f5f5f6] rounded transition-colors ${
+                isContactActive ? 'text-[#1212a0]' : 'text-[#15151c]'
+              }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Contact

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { LayoutContent } from '@/components/LayoutContent'
-import { getServices } from '@/data/services'
+import { ConditionalLayout } from "@/components/ConditionalLayout";
+import { getServices } from "@/data/services";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +25,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // Fetch services for Navbar
-  const services = await getServices()
+  const services = await getServices();
 
   return (
     <html lang="en">
@@ -44,9 +44,9 @@ export default async function RootLayout({
           />
 
           <div className="relative z-10">
-            <LayoutContent services={services}>
+            <ConditionalLayout services={services}>
               {children}
-            </LayoutContent>
+            </ConditionalLayout>
           </div>
         </div>
       </body>

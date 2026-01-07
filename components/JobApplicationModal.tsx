@@ -356,3 +356,4 @@ export function JobApplicationModal({ isOpen, onClose, jobTitle }: JobApplicatio
   )
 }
 
+

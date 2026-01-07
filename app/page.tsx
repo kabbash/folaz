@@ -20,7 +20,7 @@ export default async function Home() {
     <main className="pt-20 md:pt-0">
       <Hero />
       
-      <div className="pt-10 md:pt-48 space-y-0">
+      <div className="pt-20 space-y-0">
         <ServicesSection services={services} />
         <ProjectsSection projects={projects} />
         <PartnersSection partners={partners} />

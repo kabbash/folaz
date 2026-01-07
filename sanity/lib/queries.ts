@@ -1,11 +1,12 @@
 // Service Queries
-export const servicesQuery = `*[_type == "service"] | order(_createdAt desc) {
+export const servicesQuery = `*[_type == "service"] | order(order asc) {
   _id,
   title,
   slug,
   coverImage,
   shortDescription,
-  description
+  description,
+  order
 }`
 
 export const serviceBySlugQuery = `*[_type == "service" && slug.current == $slug][0] {
@@ -16,7 +17,8 @@ export const serviceBySlugQuery = `*[_type == "service" && slug.current == $slug
   imageList,
   shortDescription,
   description,
-  expertises
+  expertises,
+  projectsSectionTitle
 }`
 
 // Project Queries

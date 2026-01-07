@@ -66,11 +66,34 @@ export default defineType({
       of: [{ type: 'string' }],
       description: 'List of expertise bullet points',
     }),
+    defineField({
+      name: 'projectsSectionTitle',
+      title: 'Projects Section Title',
+      type: 'string',
+      description: 'Title shown above the projects carousel on service detail page',
+      initialValue: 'Selected Steel Design Projects',
+    }),
+    defineField({
+      name: 'order',
+      title: 'Display Order',
+      type: 'number',
+      description: 'Order in which this service appears (lower numbers appear first)',
+      validation: (Rule) => Rule.required().min(0),
+      initialValue: 0,
+    }),
   ],
   preview: {
     select: {
       title: 'title',
       media: 'coverImage',
+      order: 'order',
+    },
+    prepare({ title, media, order }) {
+      return {
+        title,
+        subtitle: `Order: ${order}`,
+        media,
+      }
     },
   },
 })

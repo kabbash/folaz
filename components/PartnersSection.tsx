@@ -20,22 +20,37 @@ export function PartnersSection({ partners }: PartnersSectionProps) {
             </h2>
           </div>
 
-          {/* Partners Grid */}
+          {/* Partners Grid - 5 logos per row */}
           <div className="w-full flex flex-wrap items-center justify-center gap-6 md:gap-10">
-            {sortedPartners.map((partner) => (
-              <div 
-                key={partner._id}
-                className="relative grayscale hover:grayscale-0 transition-all opacity-70 hover:opacity-100"
-              >
-                {partner.logo && (
-                  <img
-                    src={urlFor(partner.logo).width(300).height(200).url()}
-                    alt={partner.name}
-                    className="max-w-[150px] md:max-w-[200px] max-h-[80px] md:max-h-[120px] object-contain"
-                  />
-                )}
-              </div>
-            ))}
+            {sortedPartners.map((partner) => {
+              const logoElement = partner.logo && (
+                <img
+                  src={urlFor(partner.logo).url()}
+                  alt={partner.name}
+                  className="max-w-[120px] max-h-[80px] md:max-w-[220px] md:max-h-[160px] w-auto h-auto object-contain"
+                />
+              )
+
+              return (
+                <div 
+                  key={partner._id}
+                  className="relative transition-opacity hover:opacity-80"
+                >
+                  {partner.website ? (
+                    <a
+                      href={partner.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block"
+                    >
+                      {logoElement}
+                    </a>
+                  ) : (
+                    logoElement
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>

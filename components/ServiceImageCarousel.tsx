@@ -158,11 +158,11 @@ export function ServiceImageCarousel({ images, serviceName }: ServiceImageCarous
                     : '0px 2px 8px 0px rgba(47,47,62,0.15)',
                 }}
               >
-                <div className="w-full h-full rounded overflow-hidden bg-white">
+                <div className="w-full h-full rounded overflow-hidden bg-white flex items-center justify-center">
                   <img
-                    src={urlFor(image).width(800).height(600).url()}
+                    src={urlFor(image).fit('max').width(800).url()}
                     alt={`${serviceName} - Image ${idx + 1}`}
-                    className="w-full h-full object-contain"
+                    className="max-w-full max-h-full object-contain"
                   />
                 </div>
               </button>
@@ -229,11 +229,11 @@ export function ServiceImageCarousel({ images, serviceName }: ServiceImageCarous
                   scrollSnapStop: 'always'
                 }}
               >
-                <div className="w-full h-full rounded overflow-hidden bg-white">
+                <div className="w-full h-full rounded overflow-hidden bg-white flex items-center justify-center">
                   <img
-                    src={urlFor(image).width(400).height(300).url()}
+                    src={urlFor(image).fit('max').width(600).url()}
                     alt={`${serviceName} - Image ${index + 1}`}
-                    className="w-full h-full object-contain"
+                    className="max-w-full max-h-full object-contain"
                   />
                 </div>
               </button>

@@ -66,13 +66,13 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
         <section className="w-full max-w-[1280px] mx-auto px-4 py-10 md:py-20 mt-10 md:mt-20">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-10 md:gap-6">
             {/* Image */}
-            <div className="relative w-full md:w-[699px] h-[270px] md:h-[510px] rounded overflow-hidden shadow-[0px_4px_15px_0px_rgba(18,18,160,0.15)] bg-white flex-shrink-0 order-1">
+            <div className="relative w-full md:w-[699px] h-[270px] md:h-[510px] rounded overflow-hidden shadow-[0px_4px_15px_0px_rgba(18,18,160,0.15)] bg-white flex-shrink-0 order-1 flex items-center justify-center p-4">
               {service.coverImage ? (
                 <Image
-                  src={urlFor(service.coverImage).width(1400).height(1020).url()}
+                  src={urlFor(service.coverImage).fit('max').width(1400).url()}
                   alt={service.title}
                   fill
-                  className="object-contain"
+                  className="object-contain p-4"
                 />
               ) : (
                 <div className="flex items-center justify-center size-full bg-gray-100 text-gray-400">
@@ -106,7 +106,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
         <section className="w-full max-w-[1280px] mx-auto px-4 py-10 md:py-20">
           <div className="flex flex-col gap-10 items-center">
             <h2 className="text-[22px] md:text-[28px] font-semibold leading-[1.3] text-[#1212a0]">
-              Selected Steel Design Projects
+              {service.projectsSectionTitle || 'Selected Steel Design Projects'}
             </h2>
             <ServiceImageCarousel images={service.imageList} serviceName={service.title} />
           </div>

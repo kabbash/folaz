@@ -9,7 +9,7 @@ interface ServicesSectionProps {
 export function ServicesSection({ services }: ServicesSectionProps) {
 
   return (
-    <section className="w-full max-w-[1280px] mx-auto px-4 py-10 md:py-20">
+    <section className="w-full max-w-[1280px] mx-auto px-4  md:pb-4">
       <div className="flex flex-col gap-6 md:gap-10 items-center">
         {/* Section Header */}
         <div className="flex flex-col gap-4 md:gap-6 items-center w-full">

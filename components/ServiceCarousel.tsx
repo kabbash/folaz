@@ -58,7 +58,7 @@ export function ServiceCarousel({ services }: ServiceCarouselProps) {
               <Link
                 key={`${service._id}-${position}`}
                 href={`/services/${service.slug.current}`}
-                className="absolute bg-white rounded-lg p-3.5 flex flex-col gap-3.5 hover:shadow-[0px_6px_24px_0px_rgba(47,47,62,0.2)] transition-all duration-300"
+                className="absolute bg-white rounded-lg p-3.5 flex flex-col gap-3.5 hover:shadow-[0px_6px_24px_0px_rgba(47,47,62,0.2)] transition-all duration-300 overflow-hidden"
                 style={{
                   left: isLeft ? '50px' : isCenter ? '50%' : 'auto',
                   right: isLeft ? 'auto' : isCenter ? 'auto' : '50px',
@@ -72,21 +72,21 @@ export function ServiceCarousel({ services }: ServiceCarouselProps) {
                     : '0px 4px 4px 0px rgba(18,18,160,0.1)',
                 }}
               >
-                <div className="flex-1 rounded overflow-hidden bg-gray-100">
+                <div className="rounded bg-white flex items-center justify-center p-2" style={{ height: isCenter ? '400px' : '230px' }}>
                   {service.coverImage ? (
                     <img
-                      src={urlFor(service.coverImage).width(800).height(600).url()}
+                      src={urlFor(service.coverImage).url()}
                       alt={service.title}
-                      className="w-full h-full object-cover"
+                      className="max-w-full max-h-full object-contain"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
-                      <span className="text-5xl">🏗️</span>
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 rounded">
+                      <span className={isCenter ? 'text-5xl' : 'text-4xl'}>🏗️</span>
                     </div>
                   )}
                 </div>
-                <div className="p-3.5 flex items-center justify-center" style={{ minHeight: isCenter ? '120px' : '100px' }}>
-                  <h3 className={`${isCenter ? 'text-[28px]' : 'text-[22px]'} font-semibold leading-[1.3] text-[#15151c] text-center`}>
+                <div className="p-3.5 flex items-center justify-center overflow-hidden flex-shrink-0" style={{ height: isCenter ? '130px' : '107px' }}>
+                  <h3 className={`${isCenter ? 'text-[24px]' : 'text-[20px]'} font-semibold leading-[1.3] text-[#15151c] text-center ${isCenter ? 'line-clamp-3' : 'line-clamp-2'}`}>
                     {service.title}
                   </h3>
                 </div>
@@ -96,7 +96,7 @@ export function ServiceCarousel({ services }: ServiceCarouselProps) {
         </div>
 
         {/* Navigation */}
-        <div className="flex items-center justify-center gap-6 mt-10">
+        <div className="flex items-center justify-center gap-6 mt-16">
           <button 
             onClick={handlePrev}
             className="w-6 h-6 hover:opacity-70 transition-opacity"
@@ -140,15 +140,15 @@ export function ServiceCarousel({ services }: ServiceCarouselProps) {
             href={`/services/${service.slug.current}`}
             className="bg-white rounded-lg shadow-[0px_4px_16px_0px_rgba(47,47,62,0.15)] p-3.5 flex flex-col gap-3.5 hover:shadow-[0px_6px_20px_0px_rgba(47,47,62,0.2)] transition-shadow"
           >
-            <div className="w-full h-[220px] rounded overflow-hidden bg-gray-100">
+            <div className="w-full h-[220px] rounded bg-white flex items-center justify-center p-2">
               {service.coverImage ? (
                 <img
-                  src={urlFor(service.coverImage).width(400).height(300).url()}
+                  src={urlFor(service.coverImage).url()}
                   alt={service.title}
-                  className="w-full h-full object-cover"
+                  className="max-w-full max-h-full object-contain"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 rounded">
                   <span className="text-4xl">🏗️</span>
                 </div>
               )}
