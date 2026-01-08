@@ -1,4 +1,4 @@
-import { PartnerLogos } from '@/components/PartnerLogos'
+import { PartnersSection } from '@/components/PartnersSection'
 import { getServices } from '@/data/services'
 import { getPartners } from '@/data/partners'
 import { ServiceCard } from '@/components/ServiceCard'
@@ -49,7 +49,7 @@ export default async function ServicesPage() {
       {/* Services Grid */}
       <section className="px-4 pb-10 md:pb-20">
         <div className="max-w-[1280px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {services.map((service) => (
               <ServiceCard key={service._id} service={service} />
             ))}
@@ -58,14 +58,7 @@ export default async function ServicesPage() {
       </section>
 
       {/* Partners Section */}
-      <div className="bg-white py-6">
-        <div className="max-w-[1108px] mx-auto px-4">
-          <p className="text-[18px] md:text-[22px] font-semibold leading-[1.3] text-[#1212a0] text-center mb-10 px-4">
-            Serving projects in the USA, MENA, Gulf, and Egypt with certified expertise and proven engineering excellence.
-          </p>
-          <PartnerLogos partners={partners} />
-        </div>
-      </div>
+      <PartnersSection partners={partners} />
     </main>
   )
 }
