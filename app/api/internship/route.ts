@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     // Send email using Resend
     const data = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || '',
-      to: [process.env.RESEND_TO_EMAIL || ''],
+      to: [process.env.RESEND_TO_CAREERS_EMAIL || ''],
       replyTo: email,
       subject: 'Internship Application',
       html: `
@@ -121,6 +121,7 @@ export async function POST(request: Request) {
     )
   }
 }
+
 
 
 

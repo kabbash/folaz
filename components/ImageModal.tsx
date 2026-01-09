@@ -86,3 +86,4 @@ export function ImageModal({ image, alt, isOpen, onClose }: ImageModalProps) {
 
 
 
+
