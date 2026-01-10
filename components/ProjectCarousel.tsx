@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { Project } from '@/types'
 import { urlFor } from '@/sanity/lib/image'
@@ -10,11 +11,33 @@ interface ProjectCarouselProps {
 }
 
 export function ProjectCarousel({ projects }: ProjectCarouselProps) {
+  const pathname = usePathname()
   const [currentIndex, setCurrentIndex] = useState(0)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const isScrollingRef = useRef(false)
+  const isInitialMount = useRef(true)
+  const [enableScrollSnap, setEnableScrollSnap] = useState(false)
 
   const totalSlides = projects.length
+
+  // Reset state when navigating to home page
+  useEffect(() => {
+    setCurrentIndex(0)
+    setEnableScrollSnap(false)
+    isInitialMount.current = true
+    
+    // Reset scroll position to start
+    const container = scrollContainerRef.current
+    if (container) {
+      container.scrollLeft = 0
+    }
+    
+    const timer = setTimeout(() => {
+      setEnableScrollSnap(true)
+    }, 100)
+    
+    return () => clearTimeout(timer)
+  }, [pathname])
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : totalSlides - 1))
@@ -26,6 +49,12 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
 
   // Scroll to the current card when index changes
   useEffect(() => {
+    // Skip scrolling on initial mount
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+
     const container = scrollContainerRef.current
     if (!container || isScrollingRef.current) return
 
@@ -51,6 +80,9 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
   useEffect(() => {
     const container = scrollContainerRef.current
     if (!container) return
+
+    // Don't set up scroll listener if scroll snap is not enabled yet (prevents auto-scroll on mount)
+    if (!enableScrollSnap) return
 
     let scrollTimeout: NodeJS.Timeout
 
@@ -90,7 +122,7 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
       container.removeEventListener('scroll', handleScroll)
       clearTimeout(scrollTimeout)
     }
-  }, [currentIndex])
+  }, [currentIndex, enableScrollSnap])
 
   if (projects.length === 0) {
     return (
@@ -209,7 +241,7 @@ export function ProjectCarousel({ projects }: ProjectCarouselProps) {
           ref={scrollContainerRef}
           className="overflow-x-auto overflow-y-visible scrollbar-hide"
           style={{
-            scrollSnapType: 'x mandatory',
+            scrollSnapType: enableScrollSnap ? 'x mandatory' : 'none',
             WebkitOverflowScrolling: 'touch',
             scrollPaddingLeft: 'calc(50% - 140px)',
             scrollPaddingRight: 'calc(50% - 140px)'

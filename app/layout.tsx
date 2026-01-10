@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { ConditionalLayout } from "@/components/ConditionalLayout";
 import { getServices } from "@/data/services";
@@ -49,6 +50,7 @@ export default async function RootLayout({
             </ConditionalLayout>
           </div>
         </div>
+        <Analytics />
       </body>
     </html>
   );

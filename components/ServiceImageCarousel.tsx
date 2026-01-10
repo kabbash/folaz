@@ -14,12 +14,34 @@ export function ServiceImageCarousel({ images, serviceName }: ServiceImageCarous
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null)
   const mobileScrollContainerRef = useRef<HTMLDivElement>(null)
+  const isScrollingRef = useRef(false)
+  const isInitialMount = useRef(true)
+  const [enableScrollSnap, setEnableScrollSnap] = useState(false)
 
   if (!images || images.length === 0) {
     return null
   }
 
   const totalSlides = images.length
+
+  // Reset state when service changes (navigation)
+  useEffect(() => {
+    setCurrentIndex(0)
+    setEnableScrollSnap(false)
+    isInitialMount.current = true
+    
+    // Reset scroll position to start
+    const container = mobileScrollContainerRef.current
+    if (container) {
+      container.scrollLeft = 0
+    }
+    
+    const timer = setTimeout(() => {
+      setEnableScrollSnap(true)
+    }, 100)
+    
+    return () => clearTimeout(timer)
+  }, [serviceName])
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : totalSlides - 1))
@@ -29,63 +51,82 @@ export function ServiceImageCarousel({ images, serviceName }: ServiceImageCarous
     setCurrentIndex((prev) => (prev < totalSlides - 1 ? prev + 1 : 0))
   }
 
-  // Scroll to current index on mobile when currentIndex changes
+  // Scroll to the current card when index changes
   useEffect(() => {
+    // Skip scrolling on initial mount
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+
     const container = mobileScrollContainerRef.current
-    if (!container) return
+    if (!container || isScrollingRef.current) return
 
-    const card = container.children[currentIndex] as HTMLElement
-    if (!card) return
-
-    // Use scrollIntoView with center alignment for better browser support
-    requestAnimationFrame(() => {
-      card.scrollIntoView({
+    const cards = container.querySelectorAll('[data-card-index]')
+    const targetCard = cards[currentIndex] as HTMLElement
+    
+    if (targetCard) {
+      isScrollingRef.current = true
+      targetCard.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
         inline: 'center'
       })
-    })
+      
+      // Reset scrolling flag after animation
+      setTimeout(() => {
+        isScrollingRef.current = false
+      }, 500)
+    }
   }, [currentIndex])
 
-  // Update currentIndex when user manually scrolls on mobile
+  // Detect scroll position and update current index
   useEffect(() => {
     const container = mobileScrollContainerRef.current
     if (!container) return
 
-    // Use IntersectionObserver to detect which card is centered
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Find the entry with the highest intersection ratio (most visible)
-        let mostVisible = entries[0]
-        entries.forEach((entry) => {
-          if (entry.intersectionRatio > mostVisible.intersectionRatio) {
-            mostVisible = entry
+    // Don't set up scroll listener if scroll snap is not enabled yet (prevents auto-scroll on mount)
+    if (!enableScrollSnap) return
+
+    let scrollTimeout: NodeJS.Timeout
+
+    const handleScroll = () => {
+      clearTimeout(scrollTimeout)
+      
+      scrollTimeout = setTimeout(() => {
+        if (isScrollingRef.current) return
+
+        const cards = container.querySelectorAll('[data-card-index]')
+        const containerRect = container.getBoundingClientRect()
+        const containerCenter = containerRect.left + containerRect.width / 2
+
+        let closestIndex = 0
+        let closestDistance = Infinity
+
+        cards.forEach((card, index) => {
+          const cardRect = card.getBoundingClientRect()
+          const cardCenter = cardRect.left + cardRect.width / 2
+          const distance = Math.abs(containerCenter - cardCenter)
+
+          if (distance < closestDistance) {
+            closestDistance = distance
+            closestIndex = index
           }
         })
 
-        if (mostVisible && mostVisible.isIntersecting && mostVisible.intersectionRatio >= 0.5) {
-          const index = Array.from(container.children).indexOf(mostVisible.target as Element)
-          if (index !== -1 && index !== currentIndex) {
-            setCurrentIndex(index)
-          }
+        if (closestIndex !== currentIndex) {
+          setCurrentIndex(closestIndex)
         }
-      },
-      {
-        root: container,
-        threshold: [0, 0.25, 0.5, 0.75, 1],
-        rootMargin: '0px'
-      }
-    )
-
-    // Observe all cards
-    Array.from(container.children).forEach((child) => {
-      observer.observe(child)
-    })
-
-    return () => {
-      observer.disconnect()
+      }, 100)
     }
-  }, [currentIndex, images.length])
+
+    container.addEventListener('scroll', handleScroll, { passive: true })
+    
+    return () => {
+      container.removeEventListener('scroll', handleScroll)
+      clearTimeout(scrollTimeout)
+    }
+  }, [currentIndex, enableScrollSnap])
 
   const handleImageClick = (index: number) => {
     setSelectedImageIndex(index)
@@ -208,36 +249,56 @@ export function ServiceImageCarousel({ images, serviceName }: ServiceImageCarous
       </div>
 
       {/* Mobile View - Horizontal Scrolling Carousel */}
-      <div className="md:hidden flex flex-col gap-10">
+      <div className="md:hidden flex flex-col gap-10 w-full overflow-hidden">
         {/* Scrollable Container */}
-        <div className="relative overflow-x-scroll overflow-y-visible" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div 
+          ref={mobileScrollContainerRef}
+          className="overflow-x-auto overflow-y-visible scrollbar-hide"
+          style={{
+            scrollSnapType: enableScrollSnap ? 'x mandatory' : 'none',
+            WebkitOverflowScrolling: 'touch',
+            scrollPaddingLeft: 'calc(50% - 160px)',
+            scrollPaddingRight: 'calc(50% - 160px)'
+          }}
+        >
           <div 
-            ref={mobileScrollContainerRef}
-            className="flex gap-2.5 pb-4" 
+            className="flex pb-4" 
             style={{ 
-              scrollSnapType: 'x mandatory',
-              WebkitOverflowScrolling: 'touch'
+              gap: '16px', 
+              paddingLeft: 'calc(50% - 160px)', 
+              paddingRight: 'calc(50% - 160px)' 
             }}
           >
-            {images.map((image, index) => (
-              <button
-                key={index}
-                onClick={() => handleImageClick(index)}
-                className="flex-shrink-0 bg-white rounded-lg p-3.5 w-[85vw] max-w-[320px] h-[280px] shadow-[0px_2px_8px_0px_rgba(47,47,62,0.15)] hover:shadow-lg transition-shadow cursor-pointer"
-                style={{ 
-                  scrollSnapAlign: 'center',
-                  scrollSnapStop: 'always'
-                }}
-              >
-                <div className="w-full h-full rounded overflow-hidden bg-white flex items-center justify-center">
-                  <img
-                    src={urlFor(image).fit('max').width(600).url()}
-                    alt={`${serviceName} - Image ${index + 1}`}
-                    className="max-w-full max-h-full object-contain"
-                  />
-                </div>
-              </button>
-            ))}
+            {images.map((image, index) => {
+              const isCenter = index === currentIndex
+              
+              return (
+                <button
+                  key={index}
+                  data-card-index={index}
+                  onClick={() => handleImageClick(index)}
+                  className={`shrink-0 bg-white rounded-lg p-3.5 transition-shadow duration-300 cursor-pointer ${
+                    isCenter 
+                      ? 'shadow-[0px_4px_20px_0px_rgba(18,18,160,0.25)]' 
+                      : 'shadow-[0px_2px_8px_0px_rgba(47,47,62,0.15)]'
+                  }`}
+                  style={{ 
+                    scrollSnapAlign: 'center',
+                    scrollSnapStop: 'always',
+                    width: '320px',
+                    minHeight: '280px'
+                  }}
+                >
+                  <div className="w-full h-full rounded overflow-hidden bg-white flex items-center justify-center">
+                    <img
+                      src={urlFor(image).fit('max').width(600).url()}
+                      alt={`${serviceName} - Image ${index + 1}`}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                </button>
+              )
+            })}
           </div>
         </div>
 
