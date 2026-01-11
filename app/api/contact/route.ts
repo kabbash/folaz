@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       )
     }
 
-    if (!process.env.RESEND_FROM_EMAIL || !process.env.RESEND_TO_CONTACT_EMAIL) {
+    if (!process.env.RESEND_FROM_EMAIL || !process.env.RESEND_TO_QUOTATION_EMAIL) {
       console.error('[API /api/contact] Email addresses not configured')
       return NextResponse.json(
         { error: 'Email service is not fully configured. Please contact support.' },
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
     // Send email using Resend
     const data = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL,
-      to: [process.env.RESEND_TO_CONTACT_EMAIL || ''],
+      to: [process.env.RESEND_TO_QUOTATION_EMAIL || ''],
       replyTo: email,
       subject: `Contact Form: ${subject}`,
       html: `
