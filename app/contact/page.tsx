@@ -21,7 +21,10 @@ export default function ContactPage() {
     setIsSubmitting(true)
     setSubmitStatus({ type: null, message: '' })
 
+    console.log('[Contact Form] Starting submission...', formData)
+
     try {
+      console.log('[Contact Form] Sending request to /api/contact')
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
@@ -30,7 +33,16 @@ export default function ContactPage() {
         body: JSON.stringify(formData),
       })
 
-      const data = await response.json()
+      console.log('[Contact Form] Response status:', response.status)
+      
+      let data
+      try {
+        data = await response.json()
+        console.log('[Contact Form] Response data:', data)
+      } catch (parseError) {
+        console.error('[Contact Form] Failed to parse response:', parseError)
+        throw new Error('Invalid response from server')
+      }
 
       if (response.ok) {
         setSubmitStatus({
@@ -45,19 +57,21 @@ export default function ContactPage() {
           message: '',
         })
       } else {
+        console.error('[Contact Form] Request failed:', data)
         setSubmitStatus({
           type: 'error',
           message: data.error || 'Failed to send message. Please try again.',
         })
       }
     } catch (error) {
-      console.error('Error submitting form:', error)
+      console.error('[Contact Form] Error submitting form:', error)
       setSubmitStatus({
         type: 'error',
         message: 'An error occurred. Please try again later.',
       })
     } finally {
       setIsSubmitting(false)
+      console.log('[Contact Form] Submission complete')
     }
   }
 
