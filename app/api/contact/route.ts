@@ -11,9 +11,9 @@ export async function POST(request: Request) {
     console.log('[API /api/contact] Environment check:', {
       hasResendApiKey: !!process.env.RESEND_API_KEY,
       hasFromEmail: !!process.env.RESEND_FROM_EMAIL,
-      hasToEmail: !!process.env.RESEND_TO_EMAIL,
+      hasToEmail: !!process.env.RESEND_TO_CONTACT_EMAIL,
       fromEmail: process.env.RESEND_FROM_EMAIL ? '***' + process.env.RESEND_FROM_EMAIL.slice(-10) : 'NOT SET',
-      toEmail: process.env.RESEND_TO_EMAIL ? '***' + process.env.RESEND_TO_EMAIL.slice(-10) : 'NOT SET',
+      toEmail: process.env.RESEND_TO_CONTACT_EMAIL ? '***' + process.env.RESEND_TO_CONTACT_EMAIL.slice(-10) : 'NOT SET',
     })
 
     const body = await request.json()
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       )
     }
 
-    if (!process.env.RESEND_FROM_EMAIL || !process.env.RESEND_TO_EMAIL) {
+    if (!process.env.RESEND_FROM_EMAIL || !process.env.RESEND_TO_CONTACT_EMAIL) {
       console.error('[API /api/contact] Email addresses not configured')
       return NextResponse.json(
         { error: 'Email service is not fully configured. Please contact support.' },
